@@ -1,0 +1,80 @@
+﻿<Window x:Class="RockPaperScissors.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RockPaperScissors"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:enums="clr-namespace:RockPaperScissors.Enums"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Window.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="4,4,4,4"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+        <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0,5,8,0"/>
+        </Style>
+        <ObjectDataProvider x:Key="enumDataMoves" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:Moves"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="enumDataComputerType" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:ComputerType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="4">
+        <TextBlock Style="{StaticResource TextBlockStyle}" Text="Select computer"/>
+        <ComboBox  Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Source={StaticResource enumDataComputerType}}"
+                  SelectedItem="{Binding Path=SelectedComputer}" />
+            <Button Name="saveButton" Margin="0,5,0,0" Content="New Game" Command="{Binding NewGameCommand}"  />
+        </StackPanel>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockStyle}" Text="Select your move:"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Source={StaticResource enumDataMoves}}"
+                  SelectedItem="{Binding Path=SelectedMove}" />
+
+        <Button Name="performMove" Grid.Row="1" Grid.Column="2" Margin="0,5,0,0" Content="Perform Move" Command="{Binding PerformMoveCommand}"  />
+
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" Grid.ColumnSpan="3" Style="{StaticResource TextBlockStyle}" Text="{Binding ResultText}"/>
+        <ListView Grid.Row="3"  Grid.ColumnSpan="3" Width="640" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Rounds}" >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Player Score" Width="150" DisplayMemberBinding="{Binding PlayerScore}"/>
+                    <GridViewColumn Header="Player Move" Width="150" DisplayMemberBinding="{Binding PlayerMove}" />
+                    <GridViewColumn Header="Computer Move" Width="150" DisplayMemberBinding="{Binding ComputerMove}" />
+                    <GridViewColumn Header="Computer Score" Width="150" DisplayMemberBinding="{Binding ComputerScore}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
